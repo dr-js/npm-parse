@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "name": "npm-parse",
+  "version": "0.0.0",
+  "author": "dr-js",
+  "license": "MIT",
+  "description": "Reduce npm bloat",
+  "repository": "github:dr-js/npm-parse",
+  "bin": "bin/index.js",
+  "scripts": {
+    "// script ======================": "",
+    "script-base": "babel-node ./script quiet",
+    "script-pack": "babel-node ./script quiet pack",
+    "script-publish": "babel-node ./script pack publish",
+    "script-publish-dev": "babel-node ./script pack publish-dev",
+    "script-generate-spec": "babel-node ./script/generateSpec",
+    "// build =======================": "",
+    "build-library": "babel-node ./script/webpack production profile",
+    "build-library-dev": "babel-node ./script/webpack development watch",
+    "// =============================": "",
+    "analyze-stat": "npx webpack-bundle-analyzer .temp-gitignore/profile-stat.json",
+    "prepack": "echo \"Error: pack with script-*\" && exit 1"
+  },
+  "engines": {
+    "node": ">=8.8",
+    "npm": ">=6"
+  },
+  "devDependencies": {
+    "dr-js": "0.17.0-dev.2",
+    "dev-dep-tool": "0.3.3-dev.1",
+    "dev-dep-web": "0.3.3-dev.1"
+  }
+}
