@@ -9,6 +9,6 @@ module.exports = {
   plugins: [
     [ 'module-resolver', { root: [ './' ], alias: isModule ? undefined : { 'dr-js/module/(.+)': 'dr-js/library/' } } ],
     [ 'minify-replace', { replacements: [ { identifierName: '__DEV__', replacement: { type: 'booleanLiteral', value: isDev } } ] } ]
-  ].filter(Boolean),
+  ],
   comments: false
 }

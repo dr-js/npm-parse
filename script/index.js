@@ -1,14 +1,15 @@
 import { resolve } from 'path'
+import { strictEqual } from 'assert'
 import { execSync } from 'child_process'
 
-import { argvFlag, runMain } from 'dev-dep-tool/library/__utils__'
+import { argvFlag, runMain } from 'dev-dep-tool/library/main'
 import { getLogger } from 'dev-dep-tool/library/logger'
-import { wrapFileProcessor, fileProcessorWebpack } from 'dev-dep-tool/library/fileProcessor'
+import { getScriptFileListFromPathList } from 'dev-dep-tool/library/fileList'
 import { initOutput, packOutput, verifyOutputBinVersion, publishOutput } from 'dev-dep-tool/library/commonOutput'
-import { getUglifyESOption, minifyFileListWithUglifyEs } from 'dev-dep-tool/library/uglify'
+import { wrapFileProcessor, fileProcessorWebpack } from 'dev-dep-tool/library/fileProcessor'
+import { getTerserOption, minifyFileListWithTerser } from 'dev-dep-tool/library/minify'
 
 import { binary as formatBinary } from 'dr-js/module/common/format'
-import { getFileList } from 'dr-js/module/node/file/Directory'
 import { modify } from 'dr-js/module/node/file/Modify'
 
 const PATH_ROOT = resolve(__dirname, '..')
@@ -28,12 +29,10 @@ const buildOutput = async ({ logger: { padLog } }) => {
 const processOutput = async ({ packageJSON, logger }) => {
   const { padLog, log } = logger
 
-  const fileList = [
-    ...await getFileList(fromOutput())
-  ].filter((path) => path.endsWith('.js') && !path.endsWith('.test.js'))
+  const fileList = await getScriptFileListFromPathList([ '.' ], fromOutput)
 
   padLog(`minify output`)
-  let sizeCodeReduceModule = await minifyFileListWithUglifyEs({ fileList, option: getUglifyESOption({}), rootPath: PATH_OUTPUT, logger })
+  let sizeCodeReduceModule = await minifyFileListWithTerser({ fileList, option: getTerserOption({}), rootPath: PATH_OUTPUT, logger })
 
   log(`process output`)
   const processWebpack = wrapFileProcessor({ processor: fileProcessorWebpack, logger })
@@ -41,11 +40,39 @@ const processOutput = async ({ packageJSON, logger }) => {
   log(`output size reduce: ${formatBinary(sizeCodeReduceModule)}B`)
 }
 
+const testCode = async ({ padLog, log }) => {
+  padLog(`test source`)
+  execSync(`npm run test-mocha-source`, execOptionRoot)
+
+  padLog(`test output`)
+
+  log('parse-script: "test"')
+  strictEqual(
+    execSync(`node ./output-gitignore/bin -s test`, { ...execOptionRoot, stdio: 'pipe' })
+      .toString()
+      .trim(),
+    `npm --no-update-notifier run "script-pack-test"`
+  )
+
+  log('parse-script: "prepack" with extraArgs')
+  strictEqual(
+    execSync(`node ./output-gitignore/bin -s prepack 1 2 "3"`, { ...execOptionRoot, stdio: 'pipe' })
+      .toString()
+      .trim(),
+    [
+      `(`,
+      `  echo "Error: pack with script-*"`,
+      `  exit 1 "1" "2" "3"`,
+      `)`
+    ].join('\n')
+  )
+}
+
 const clearOutput = async ({ packageJSON, logger: { padLog, log } }) => {
   padLog(`clear output`)
 
   log(`clear test`)
-  const fileList = (await getFileList(fromOutput())).filter((filePath) => filePath.endsWith('.test.js'))
+  const fileList = await getScriptFileListFromPathList([ '.' ], fromOutput, (path) => path.endsWith('.test.js'))
   for (const filePath of fileList) await modify.delete(filePath)
 }
 
@@ -59,10 +86,7 @@ runMain(async (logger) => {
   await buildOutput({ logger })
   await processOutput({ packageJSON, logger })
 
-  if (argvFlag('test', 'publish', 'publish-dev')) {
-    logger.padLog(`test source`)
-    execSync(`npm run test-mocha-source`, execOptionRoot)
-  }
+  argvFlag('test', 'publish', 'publish-dev') && await testCode(logger)
 
   await clearOutput({ packageJSON, logger })
   await verifyOutputBinVersion({ packageJSON, fromOutput, logger })

@@ -3,10 +3,12 @@
 [![i:npm]][l:npm]
 [![i:ci]][l:ci]
 [![i:size]][l:size]
+[![i:npm-dev]][l:npm]
 
 Reduce npm bloat
 
-[i:npm]: https://img.shields.io/npm/v/npm-parse.svg
+[i:npm]: https://img.shields.io/npm/v/npm-parse.svg?colorB=blue
+[i:npm-dev]: https://img.shields.io/npm/v/npm-parse/dev.svg
 [l:npm]: https://www.npmjs.com/package/npm-parse
 [i:ci]: https://img.shields.io/travis/dr-js/npm-parse/master.svg
 [l:ci]: https://travis-ci.org/dr-js/npm-parse

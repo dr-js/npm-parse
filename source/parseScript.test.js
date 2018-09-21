@@ -1,4 +1,5 @@
 import { strictEqual } from 'assert'
+import { resolve } from 'path'
 import { readFileSync } from 'fs'
 import {
   wrapJoinBashArgs,
@@ -10,7 +11,7 @@ import {
 const { describe, it } = global
 
 const devLog = () => {}
-const packageJSON = JSON.parse(readFileSync('package.json'))
+const packageJSON = JSON.parse(readFileSync(resolve(__dirname, '../package.json')))
 
 describe('parseScript', () => {
   it('wrapJoinBashArgs()', () => {
