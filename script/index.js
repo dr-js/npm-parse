@@ -4,7 +4,7 @@ import { execSync } from 'child_process'
 import { argvFlag, runMain } from 'dev-dep-tool/library/__utils__'
 import { getLogger } from 'dev-dep-tool/library/logger'
 import { wrapFileProcessor, fileProcessorWebpack } from 'dev-dep-tool/library/fileProcessor'
-import { initOutput, packOutput, publishOutput } from 'dev-dep-tool/library/commonOutput'
+import { initOutput, packOutput, verifyOutputBinVersion, publishOutput } from 'dev-dep-tool/library/commonOutput'
 import { getUglifyESOption, minifyFileListWithUglifyEs } from 'dev-dep-tool/library/uglify'
 
 import { binary as formatBinary } from 'dr-js/module/common/format'
@@ -41,6 +41,14 @@ const processOutput = async ({ packageJSON, logger }) => {
   log(`output size reduce: ${formatBinary(sizeCodeReduceModule)}B`)
 }
 
+const clearOutput = async ({ packageJSON, logger: { padLog, log } }) => {
+  padLog(`clear output`)
+
+  log(`clear test`)
+  const fileList = (await getFileList(fromOutput())).filter((filePath) => filePath.endsWith('.test.js'))
+  for (const filePath of fileList) await modify.delete(filePath)
+}
+
 runMain(async (logger) => {
   const packageJSON = await initOutput({ fromRoot, fromOutput, logger })
 
@@ -50,6 +58,14 @@ runMain(async (logger) => {
 
   await buildOutput({ logger })
   await processOutput({ packageJSON, logger })
+
+  if (argvFlag('test', 'publish', 'publish-dev')) {
+    logger.padLog(`test source`)
+    execSync(`npm run test-mocha-source`, execOptionRoot)
+  }
+
+  await clearOutput({ packageJSON, logger })
+  await verifyOutputBinVersion({ packageJSON, fromOutput, logger })
 
   const pathPackagePack = await packOutput({ fromRoot, fromOutput, logger })
   await publishOutput({ flagList: process.argv, packageJSON, pathPackagePack, logger })
