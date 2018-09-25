@@ -1,12 +1,11 @@
 import { resolve } from 'path'
-import { strictEqual } from 'assert'
 import { execSync } from 'child_process'
 
 import { argvFlag, runMain } from 'dev-dep-tool/library/main'
 import { getLogger } from 'dev-dep-tool/library/logger'
 import { getScriptFileListFromPathList } from 'dev-dep-tool/library/fileList'
 import { initOutput, packOutput, verifyOutputBinVersion, publishOutput } from 'dev-dep-tool/library/commonOutput'
-import { wrapFileProcessor, fileProcessorWebpack } from 'dev-dep-tool/library/fileProcessor'
+import { wrapFileProcessor, fileProcessorBabel, fileProcessorWebpack } from 'dev-dep-tool/library/fileProcessor'
 import { getTerserOption, minifyFileListWithTerser } from 'dev-dep-tool/library/minify'
 
 import { binary as formatBinary } from 'dr-js/module/common/format'
@@ -22,50 +21,33 @@ const buildOutput = async ({ logger: { padLog } }) => {
   padLog(`build library`)
   execSync('npm run build-library', execOptionRoot)
 
-  padLog('generate export info')
-  execSync(`npm run script-generate-spec`, execOptionRoot)
+  padLog(`build bin`)
+  execSync('npm run build-bin', execOptionRoot)
 }
 
 const processOutput = async ({ packageJSON, logger }) => {
   const { padLog, log } = logger
 
-  const fileList = await getScriptFileListFromPathList([ '.' ], fromOutput)
+  const fileListLibrary = await getScriptFileListFromPathList([ 'library' ], fromOutput)
+  const fileListBin = await getScriptFileListFromPathList([ 'bin' ], fromOutput)
 
   padLog(`minify output`)
-  let sizeCodeReduceModule = await minifyFileListWithTerser({ fileList, option: getTerserOption({}), rootPath: PATH_OUTPUT, logger })
+  let sizeCodeReduceModule = await minifyFileListWithTerser({ fileList: [ ...fileListLibrary, ...fileListBin ], option: getTerserOption(), rootPath: PATH_OUTPUT, logger })
 
   log(`process output`)
+  const processBabel = wrapFileProcessor({ processor: fileProcessorBabel, logger })
   const processWebpack = wrapFileProcessor({ processor: fileProcessorWebpack, logger })
-  for (const filePath of fileList) sizeCodeReduceModule += await processWebpack(filePath)
+  // for (const filePath of fileListLibrary) sizeCodeReduceModule += await processBabel(filePath)
+  for (const filePath of fileListBin) sizeCodeReduceModule += await processWebpack(filePath)
   log(`output size reduce: ${formatBinary(sizeCodeReduceModule)}B`)
 }
 
-const testCode = async ({ padLog, log }) => {
+const testCode = async ({ padLog }) => {
   padLog(`test source`)
   execSync(`npm run test-mocha-source`, execOptionRoot)
 
   padLog(`test output`)
-
-  log('parse-script: "test"')
-  strictEqual(
-    execSync(`node ./output-gitignore/bin -s test`, { ...execOptionRoot, stdio: 'pipe' })
-      .toString()
-      .trim(),
-    `npm --no-update-notifier run "script-pack-test"`
-  )
-
-  log('parse-script: "prepack" with extraArgs')
-  strictEqual(
-    execSync(`node ./output-gitignore/bin -s prepack 1 2 "3"`, { ...execOptionRoot, stdio: 'pipe' })
-      .toString()
-      .trim(),
-    [
-      `(`,
-      `  echo "Error: pack with script-*"`,
-      `  exit 1 "1" "2" "3"`,
-      `)`
-    ].join('\n')
-  )
+  execSync(`npm run test-bin`, execOptionRoot)
 }
 
 const clearOutput = async ({ packageJSON, logger: { padLog, log } }) => {
@@ -77,11 +59,16 @@ const clearOutput = async ({ packageJSON, logger: { padLog, log } }) => {
 }
 
 runMain(async (logger) => {
+  const { padLog } = logger
+
   const packageJSON = await initOutput({ fromRoot, fromOutput, logger })
 
-  logger.padLog(`copy bin`)
-  await modify.copy(fromRoot('source-bin/index.js'), fromOutput('bin/index.js'))
+  // padLog(`copy bin`)
+  // await modify.copy(fromRoot('source-bin/index.js'), fromOutput('bin/index.js'))
   if (!argvFlag('pack')) return
+
+  padLog('generate export info')
+  execSync(`npm run script-generate-spec`, execOptionRoot)
 
   await buildOutput({ logger })
   await processOutput({ packageJSON, logger })

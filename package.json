@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "npm-parse",
-  "version": "0.0.2-dev.0",
+  "version": "0.0.2-dev.1",
   "author": "dr-js",
   "license": "MIT",
   "description": "Reduce npm bloat",
@@ -21,13 +21,17 @@
     "script-publish-dev": "babel-node ./script pack publish-dev",
     "script-generate-spec": "babel-node ./script/generateSpec",
     "// build =======================": "",
-    "build-library": "babel-node ./script/webpack production profile",
-    "build-library-dev": "babel-node ./script/webpack development watch",
+    "build-library": "babel ./source --out-dir ./output-gitignore/library",
+    "build-library-dev": "cross-env BABEL_ENV=dev npm run build-library -- --watch",
+    "build-bin": "babel-node ./script/webpack-bin production profile",
+    "build-bin-dev": "babel-node ./script/webpack-bin development watch",
     "// test ========================": "",
     "test-mocha-dev": "mocha --require @babel/register \"source/parseScript.test.js\"",
     "test-mocha-source": "mocha --require @babel/register \"source/**/*.test.js\"",
+    "test-bin": "babel-node ./script/test-bin",
     "// =============================": "",
     "analyze-stat": "npx webpack-bundle-analyzer .temp-gitignore/profile-stat.json",
+    "analyze-stat-bin": "npx webpack-bundle-analyzer .temp-gitignore/profile-stat-bin.json",
     "test": "npm run script-pack-test",
     "prepack": "echo \"Error: pack with script-*\" && exit 1"
   },
@@ -36,8 +40,8 @@
     "npm": ">=6"
   },
   "devDependencies": {
-    "dr-js": "0.17.1-dev.0",
-    "dev-dep-tool": "0.4.1-dev.0",
-    "dev-dep-web": "^0.4.0"
+    "dr-js": "^0.17.1",
+    "dev-dep-tool": "0.4.1",
+    "dev-dep-web": "0.4.1"
   }
 }

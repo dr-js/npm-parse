@@ -6,7 +6,8 @@ const COMMON_BASH_COMMAND_LIST = [
   'su', 'sudo',
   'rm', 'mkdir',
   'if', 'cd', 'eval',
-  'echo', 'exit', 'kill'
+  'exit', 'kill', 'echo', 'cat',
+  'dr-js' // why not, global
 ]
 
 const REGEXP_ESCAPE = /\\/g
