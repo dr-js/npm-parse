@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "npm-parse",
-  "version": "0.0.2-dev.2",
+  "version": "0.0.2",
   "author": "dr-js",
   "license": "MIT",
   "description": "Reduce npm bloat",
