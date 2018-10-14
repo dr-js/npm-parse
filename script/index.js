@@ -18,11 +18,17 @@ const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
 const execOptionRoot = { cwd: fromRoot(), stdio: argvFlag('quiet') ? [ 'ignore', 'ignore', 'inherit' ] : 'inherit', shell: true }
 
 const buildOutput = async ({ logger: { padLog } }) => {
+  padLog('generate export info')
+  execSync(`npm run script-generate-spec`, execOptionRoot)
+
   padLog(`build library`)
   execSync('npm run build-library', execOptionRoot)
 
   padLog(`build bin`)
   execSync('npm run build-bin', execOptionRoot)
+
+  padLog(`delete temp build file`)
+  execSync('npm run script-delete-temp-build-file', execOptionRoot)
 }
 
 const processOutput = async ({ packageJSON, logger }) => {
@@ -37,7 +43,7 @@ const processOutput = async ({ packageJSON, logger }) => {
   log(`process output`)
   const processBabel = wrapFileProcessor({ processor: fileProcessorBabel, logger })
   const processWebpack = wrapFileProcessor({ processor: fileProcessorWebpack, logger })
-  // for (const filePath of fileListLibrary) sizeCodeReduceModule += await processBabel(filePath)
+  for (const filePath of fileListLibrary) sizeCodeReduceModule += await processBabel(filePath)
   for (const filePath of fileListBin) sizeCodeReduceModule += await processWebpack(filePath)
   log(`output size reduce: ${formatBinary(sizeCodeReduceModule)}B`)
 }
@@ -59,25 +65,19 @@ const clearOutput = async ({ packageJSON, logger: { padLog, log } }) => {
 }
 
 runMain(async (logger) => {
-  const { padLog } = logger
-
+  const isTest = argvFlag('test', 'publish', 'publish-dev')
   const packageJSON = await initOutput({ fromRoot, fromOutput, logger })
-
-  // padLog(`copy bin`)
-  // await modify.copy(fromRoot('source-bin/index.js'), fromOutput('bin/index.js'))
   if (!argvFlag('pack')) return
-
-  padLog('generate export info')
-  execSync(`npm run script-generate-spec`, execOptionRoot)
 
   await buildOutput({ logger })
   await processOutput({ packageJSON, logger })
-
-  argvFlag('test', 'publish', 'publish-dev') && await testCode(logger)
+  isTest && await testCode(logger)
 
   await clearOutput({ packageJSON, logger })
   await verifyOutputBinVersion({ packageJSON, fromOutput, logger })
 
   const pathPackagePack = await packOutput({ fromRoot, fromOutput, logger })
+  isTest && execSync(`npm run test-bin -- npx`, execOptionRoot)
+
   await publishOutput({ flagList: process.argv, packageJSON, pathPackagePack, logger })
 }, getLogger(process.argv.slice(2).join('+'), argvFlag('quiet')))

@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
 
-import { tryRequire } from 'dr-js/module/env/tryRequire'
+import { wrapJoinBashArgs, parsePackageScript } from 'source'
+
 import { MODE_FORMAT_LIST, parseOption, formatUsage } from './option'
 import { name as packageName, version as packageVersion } from '../package.json'
 
@@ -12,7 +13,6 @@ const runMode = async (modeName, { getOptionOptional }) => {
 
   switch (modeName) {
     case 'parse-script': {
-      const { wrapJoinBashArgs, parsePackageScript } = tryRequire('../library/parseScript')
       const [ scriptName, ...extraArgs ] = argumentList
       const packageJSON = JSON.parse(readFileSync('package.json'))
       return console.log(parsePackageScript(packageJSON, scriptName, wrapJoinBashArgs(extraArgs), 0, devLog))

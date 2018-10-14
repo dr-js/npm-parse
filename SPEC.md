@@ -1,11 +1,15 @@
 # Specification
 
 * [Export Path](#export-path)
+* [Export Tree](#export-tree)
 * [Bin Option Format](#bin-option-format)
 
 #### Export Path
 + 📄 [source/parseScript.js](source/parseScript.js)
   - `parseCommand`, `parsePackageScript`, `warpBashSubShell`, `wrapJoinBashArgs`
+
+#### Export Tree
+- `parseCommand`, `parsePackageScript`, `warpBashSubShell`, `wrapJoinBashArgs`
 
 #### Bin Option Format
 📄 [source/option.js](source/option.js)
