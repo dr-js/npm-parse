@@ -34,7 +34,7 @@ check what the parsed script look like, with some debug log: (always do this che
 npx -q npm-parse -D -s "some-package-json-script-name"
 ```
 
-parse the script then run with `eval`, the most common usage:
+parse the script and run with `eval` (the most common usage):
 ```bash
 eval "$(npx -q npm-parse -s "some-package-json-script-name")"
 ```
@@ -42,6 +42,11 @@ eval "$(npx -q npm-parse -s "some-package-json-script-name")"
 parse the script then run with `bash`, but no tty input (interact program like `top` will fail):
 ```bash
 npx -q npm-parse -s "some-package-json-script-name" | bash -
+```
+
+parse the script and run with `bash` (alternative usage, but with one wrapper layer):
+```bash
+npx -q npm-parse -r "some-package-json-script-name"
 ```
 
 

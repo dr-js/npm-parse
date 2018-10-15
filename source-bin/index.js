@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs'
+import { run } from 'dr-js/module/node/system/Run'
 
 import { wrapJoinBashArgs, parsePackageScript } from 'source'
 
@@ -11,13 +12,12 @@ const runMode = async (modeName, { getOptionOptional }) => {
     ? (tab, ...args) => console.log(`${'  '.repeat(tab)}${args.join(' ')}`)
     : () => {}
 
-  switch (modeName) {
-    case 'parse-script': {
-      const [ scriptName, ...extraArgs ] = argumentList
-      const packageJSON = JSON.parse(readFileSync('package.json'))
-      return console.log(parsePackageScript(packageJSON, scriptName, wrapJoinBashArgs(extraArgs), 0, devLog))
-    }
-  }
+  const [ scriptName, ...extraArgs ] = argumentList
+  const packageJSON = JSON.parse(readFileSync('package.json'))
+  const command = parsePackageScript(packageJSON, scriptName, wrapJoinBashArgs(extraArgs), 0, devLog)
+
+  if (modeName === 'parse-script') return console.log(command)
+  if (modeName === 'run-script') return run({ command: 'bash', argList: [ '-c', command ], option: { stdio: 'inherit', shell: false } }).promise
 }
 
 const main = async () => {

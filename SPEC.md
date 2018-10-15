@@ -25,6 +25,7 @@
 >   --debug -D [OPTIONAL] [ARGUMENT=0+]
 >       more debug log
 >   --parse-script --s -s [OPTIONAL] [ARGUMENT=1+]
+>   --run-script --r -r [OPTIONAL] [ARGUMENT=1+]
 > ENV Usage:
 >   "
 >     #!/usr/bin/env bash
@@ -33,6 +34,7 @@
 >     export NPM_PARSE_VERSION="[OPTIONAL] [ARGUMENT=0+]"
 >     export NPM_PARSE_DEBUG="[OPTIONAL] [ARGUMENT=0+]"
 >     export NPM_PARSE_PARSE_SCRIPT="[OPTIONAL] [ARGUMENT=1+]"
+>     export NPM_PARSE_RUN_SCRIPT="[OPTIONAL] [ARGUMENT=1+]"
 >   "
 > JSON Usage:
 >   {
@@ -41,5 +43,6 @@
 >     "version": [ "[OPTIONAL] [ARGUMENT=0+]" ],
 >     "debug": [ "[OPTIONAL] [ARGUMENT=0+]" ],
 >     "parseScript": [ "[OPTIONAL] [ARGUMENT=1+]" ],
+>     "runScript": [ "[OPTIONAL] [ARGUMENT=1+]" ],
 >   }
 > ```

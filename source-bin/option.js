@@ -15,7 +15,8 @@ const parseFormat = (modeFormat) => {
 }
 
 const MODE_FORMAT_LIST = [
-  'parse-script|s|1-'
+  'parse-script|s|1-',
+  'run-script|r|1-'
 ].map(parseFormat)
 
 const OPTION_CONFIG = {
