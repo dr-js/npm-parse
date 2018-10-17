@@ -1,9 +1,9 @@
 import { resolve } from 'path'
 import { DefinePlugin, BannerPlugin } from 'webpack'
 
-import { argvFlag, runMain } from 'dev-dep-tool/library/main'
-import { getLogger } from 'dev-dep-tool/library/logger'
-import { compileWithWebpack, commonFlag } from 'dev-dep-tool/library/webpack'
+import { argvFlag, runMain } from 'dev-dep-tool/module/main'
+import { getLogger } from 'dev-dep-tool/module/logger'
+import { compileWithWebpack, commonFlag } from 'dev-dep-tool/module/webpack'
 
 const PATH_ROOT = resolve(__dirname, '..')
 const PATH_OUTPUT = resolve(__dirname, '../output-gitignore')
@@ -11,7 +11,11 @@ const fromRoot = (...args) => resolve(PATH_ROOT, ...args)
 const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
 
 runMain(async (logger) => {
-  const { mode, isWatch, isProduction, profileOutput, assetMapOutput } = await commonFlag({ argvFlag, profileOutput: fromRoot('.temp-gitignore/profile-stat-bin.json'), logger })
+  const { mode, isWatch, isProduction, profileOutput, assetMapOutput } = await commonFlag({
+    profileOutput: fromRoot('.temp-gitignore/profile-stat-bin.json'),
+    argvFlag,
+    logger
+  })
 
   const babelOption = {
     configFile: false,

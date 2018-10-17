@@ -4,11 +4,11 @@ import { writeFileSync, existsSync } from 'fs'
 
 import { stringIndentLine } from 'dr-js/module/common/format'
 
-import { runMain } from 'dev-dep-tool/library/main'
-import { getLogger } from 'dev-dep-tool/library/logger'
-import { collectSourceRouteMap } from 'dev-dep-tool/library/ExportIndex/parseExport'
-import { generateIndexScript, generateExportInfo } from 'dev-dep-tool/library/ExportIndex/generateInfo'
-import { autoAppendMarkdownHeaderLink, renderMarkdownFileLink, renderMarkdownExportPath, renderMarkdownExportTree } from 'dev-dep-tool/library/ExportIndex/renderMarkdown'
+import { runMain } from 'dev-dep-tool/module/main'
+import { getLogger } from 'dev-dep-tool/module/logger'
+import { collectSourceRouteMap } from 'dev-dep-tool/module/ExportIndex/parseExport'
+import { generateIndexScript, generateExportInfo } from 'dev-dep-tool/module/ExportIndex/generateInfo'
+import { autoAppendMarkdownHeaderLink, renderMarkdownFileLink, renderMarkdownExportPath, renderMarkdownExportTree } from 'dev-dep-tool/module/ExportIndex/renderMarkdown'
 
 import { formatUsage } from 'source-bin/option'
 
@@ -16,7 +16,7 @@ const PATH_ROOT = resolve(__dirname, '..')
 const fromRoot = (...args) => resolve(PATH_ROOT, ...args)
 
 const renderMarkdownBinOptionFormat = () => [
-  renderMarkdownFileLink('source/option.js'),
+  renderMarkdownFileLink('source-bin/option.js'),
   '> ```',
   stringIndentLine(formatUsage(), '> '),
   '> ```'

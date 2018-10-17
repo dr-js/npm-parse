@@ -12,7 +12,7 @@
 - `parseCommand`, `parsePackageScript`, `warpBashSubShell`, `wrapJoinBashArgs`
 
 #### Bin Option Format
-📄 [source/option.js](source/option.js)
+📄 [source-bin/option.js](source-bin/option.js)
 > ```
 > CLI Usage:
 >   --config -c [OPTIONAL] [ARGUMENT=1]

@@ -34,12 +34,14 @@ describe('parseScript', () => {
 
     const part1 = `should return/unwrap for directly executable command`
     const part1CommandList = [
-      'echo 123',
       'cd ./source',
+      'cd ./source && abc',
+      './test/test.sh',
+      './test/test.sh && abc',
+      'echo 123',
       'node ./bin/index.js',
       'rm -rf /*',
-      'kill 3000',
-      './test/test.sh'
+      'kill 3000'
     ]
     part1CommandList.forEach((command) => strictEqual(parseCommand(packageJSON, command, 0, devLog), command, part1))
 

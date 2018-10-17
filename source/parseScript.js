@@ -1,13 +1,18 @@
 import { stringIndentLine } from 'dr-js/module/common/format'
 
-const COMMON_BASH_COMMAND_LIST = [
-  'node', 'npx', 'git',
+const COMPLEX_BASH_COMMAND_LIST = [ // complex command, do not parse further
   'bash', 'sh', 'ssh', '.', 'source',
   'su', 'sudo',
+  'cd', // TODO: try parse simple cd, to unwrap further
+  'if',
+  'eval'
+]
+
+const SIMPLE_BASH_COMMAND_LIST = [
+  'node', 'npx', 'git',
   'rm', 'mkdir',
-  'if', 'cd', 'eval',
-  'exit', 'kill', 'echo', 'cat',
-  'dr-js' // why not, global
+  'echo', 'cat',
+  'exit', 'kill'
 ]
 
 const REGEXP_ESCAPE = /\\/g
@@ -20,30 +25,34 @@ ${stringIndentLine(command, '  ')}
 
 const parseCommand = (packageJSON, scriptString, level, devLog) => {
   devLog(level, '[parseCommand]', `input: <${scriptString}>`)
+  scriptString = scriptString.trim()
 
+  const [ scriptLeadingCommand, scriptSecondCommand, ...scriptExtraCommandList ] = scriptString.split(' ')
   if (
-    scriptString.includes(' && ')
-  ) { // combo command, split
+    COMPLEX_BASH_COMMAND_LIST.includes(scriptLeadingCommand) ||
+    scriptLeadingCommand.startsWith('./')
+  ) {
+    devLog(level, '- directly executable complex command, return')
+    return scriptString
+  } else devLog(level, `? not directly executable complex command: ${scriptLeadingCommand}`)
+
+  if (scriptString.includes(' && ')) {
     devLog(level, '- combo command, split')
 
     const subCommandList = scriptString.split(' && ')
     return warpBashSubShell(subCommandList.map((command) => parseCommand(packageJSON, command, level + 1, devLog) || command).join('\n'))
   } else devLog(level, `? not combo command, I guess`)
 
-  const [ scriptLeadingCommand, scriptSecondCommand, ...scriptExtraCommandList ] = scriptString.trim().split(' ')
-  if (
-    COMMON_BASH_COMMAND_LIST.includes(scriptLeadingCommand) ||
-    scriptLeadingCommand.startsWith('./')
-  ) { // directly executable, return
-    devLog(level, '- directly executable, return')
+  if (SIMPLE_BASH_COMMAND_LIST.includes(scriptLeadingCommand)) {
+    devLog(level, '- directly executable simple command, return')
 
     return scriptString
-  } else devLog(level, `? not common directly executable: ${scriptLeadingCommand}`)
+  } else devLog(level, `? not directly executable simple command: ${scriptLeadingCommand}`)
 
   if (
     scriptSecondCommand === 'run' &&
     [ 'npm', 'yarn' ].includes(scriptLeadingCommand)
-  ) { // package script, parse
+  ) {
     devLog(level, '- package script, parse')
 
     const [ scriptName, ...extraArgs ] = scriptExtraCommandList
