@@ -1,12 +1,13 @@
 import { resolve } from 'path'
 import { execSync } from 'child_process'
 
-import { argvFlag, runMain } from 'dev-dep-tool/module/main'
-import { getLogger } from 'dev-dep-tool/module/logger'
-import { getScriptFileListFromPathList } from 'dev-dep-tool/module/fileList'
-import { initOutput, packOutput, verifyOutputBinVersion, publishOutput } from 'dev-dep-tool/module/commonOutput'
-import { processFileList, fileProcessorBabel, fileProcessorWebpack } from 'dev-dep-tool/module/fileProcessor'
-import { getTerserOption, minifyFileListWithTerser } from 'dev-dep-tool/module/minify'
+import { argvFlag, runMain } from 'dr-dev/module/main'
+import { getLogger } from 'dr-dev/module/logger'
+import { getScriptFileListFromPathList } from 'dr-dev/module/fileList'
+import { initOutput, packOutput, verifyOutputBinVersion, publishOutput } from 'dr-dev/module/commonOutput'
+import { processFileList, fileProcessorBabel, fileProcessorWebpack } from 'dr-dev/module/fileProcessor'
+import { getTerserOption, minifyFileListWithTerser } from 'dr-dev/module/minify'
+import { writeLicenseFile } from 'dr-dev/module/license'
 
 import { binary as formatBinary } from 'dr-js/module/common/format'
 import { modify } from 'dr-js/module/node/file/Modify'
@@ -64,6 +65,7 @@ const clearOutput = async ({ packageJSON, logger: { padLog, log } }) => {
 runMain(async (logger) => {
   const isTest = argvFlag('test', 'publish', 'publish-dev')
   const packageJSON = await initOutput({ fromRoot, fromOutput, logger })
+  writeLicenseFile(fromRoot('LICENSE'), packageJSON.license, packageJSON.author)
   if (!argvFlag('pack')) return
 
   await buildOutput({ logger })

@@ -1,9 +1,9 @@
 import { resolve } from 'path'
 import { DefinePlugin } from 'webpack'
 
-import { argvFlag, runMain } from 'dev-dep-tool/module/main'
-import { getLogger } from 'dev-dep-tool/module/logger'
-import { compileWithWebpack, commonFlag } from 'dev-dep-tool/module/webpack'
+import { argvFlag, runMain } from 'dr-dev/module/main'
+import { getLogger } from 'dr-dev/module/logger'
+import { compileWithWebpack, commonFlag } from 'dr-dev/module/webpack'
 
 const PATH_ROOT = resolve(__dirname, '..')
 const PATH_OUTPUT = resolve(__dirname, '../output-gitignore')
@@ -17,7 +17,7 @@ runMain(async (logger) => {
     configFile: false,
     babelrc: false,
     cacheDirectory: isProduction,
-    presets: [ [ '@babel/env', { targets: { node: '8.8' }, modules: false } ] ]
+    presets: [ [ '@babel/env', { targets: { node: '10' }, modules: false } ] ]
   }
 
   const config = {

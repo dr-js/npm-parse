@@ -2,8 +2,8 @@ import { resolve } from 'path'
 import { strictEqual } from 'assert'
 import { execSync } from 'child_process'
 
-import { argvFlag, runMain } from 'dev-dep-tool/module/main'
-import { getLogger } from 'dev-dep-tool/module/logger'
+import { argvFlag, runMain } from 'dr-dev/module/main'
+import { getLogger } from 'dr-dev/module/logger'
 
 import { name as packageName, version as packageVersion } from '../package.json'
 

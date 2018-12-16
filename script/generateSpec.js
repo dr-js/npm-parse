@@ -4,11 +4,11 @@ import { writeFileSync, existsSync } from 'fs'
 
 import { stringIndentLine } from 'dr-js/module/common/format'
 
-import { runMain } from 'dev-dep-tool/module/main'
-import { getLogger } from 'dev-dep-tool/module/logger'
-import { collectSourceRouteMap } from 'dev-dep-tool/module/ExportIndex/parseExport'
-import { generateIndexScript, generateExportInfo } from 'dev-dep-tool/module/ExportIndex/generateInfo'
-import { autoAppendMarkdownHeaderLink, renderMarkdownFileLink, renderMarkdownExportPath, renderMarkdownExportTree } from 'dev-dep-tool/module/ExportIndex/renderMarkdown'
+import { runMain } from 'dr-dev/module/main'
+import { getLogger } from 'dr-dev/module/logger'
+import { collectSourceRouteMap } from 'dr-dev/module/ExportIndex/parseExport'
+import { generateIndexScript, generateExportInfo } from 'dr-dev/module/ExportIndex/generateInfo'
+import { autoAppendMarkdownHeaderLink, renderMarkdownFileLink, renderMarkdownExportPath, renderMarkdownExportTree } from 'dr-dev/module/ExportIndex/renderMarkdown'
 
 import { formatUsage } from 'source-bin/option'
 

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "npm-parse",
-  "version": "0.0.3",
+  "version": "0.0.4-dev.0",
   "description": "Reduce npm bloat",
   "author": "dr-js",
   "license": "MIT",
@@ -37,12 +37,12 @@
     "prepack": "echo \"Error: pack with script-*\" && exit 1"
   },
   "engines": {
-    "node": ">=8.12",
+    "node": ">=10",
     "npm": ">=6"
   },
   "devDependencies": {
-    "dev-dep-tool": "0.5.1-dev.0",
-    "dev-dep-web": "0.5.1-dev.0",
-    "dr-js": "0.18.2-dev.0"
+    "dr-dev": "0.0.2-dev.1",
+    "dr-dev-web": "0.0.2-dev.1",
+    "dr-js": "0.19.0-dev.1"
   }
 }
