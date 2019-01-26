@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "npm-parse",
-  "version": "0.0.4-dev.0",
+  "version": "0.0.4-dev.1",
   "description": "Reduce npm bloat",
   "author": "dr-js",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "script-pack-test": "babel-node ./script verbose pack test",
     "script-publish": "babel-node ./script pack publish",
     "script-publish-dev": "babel-node ./script pack publish-dev",
-    "script-generate-spec": "babel-node ./script/generateSpec",
+    "script-generate-spec": "babel-node ./script/generateSpec ./tempFileDelete.config.json",
     "script-delete-temp-build-file": "dr-js -c ./tempFileDelete.config.json",
     "// build =======================": "",
     "build-library": "babel-node ./script/webpack production profile",
@@ -32,7 +32,7 @@
     "test-bin": "babel-node ./script/test-bin",
     "// =============================": "",
     "analyze-stat": "npx webpack-bundle-analyzer .temp-gitignore/profile-stat.json",
-    "analyze-stat-bin": "npx webpack-bundle-analyzer .temp-gitignore/profile-stat-bin.json",
+    "analyze-stat-bin": "npx webpack-bundle-analyzer --port 9999 .temp-gitignore/profile-stat-bin.json",
     "test": "npm run script-pack-test",
     "prepack": "echo \"Error: pack with script-*\" && exit 1"
   },
@@ -41,8 +41,8 @@
     "npm": ">=6"
   },
   "devDependencies": {
-    "dr-dev": "0.0.2-dev.1",
-    "dr-dev-web": "0.0.2-dev.1",
-    "dr-js": "0.19.0-dev.1"
+    "dr-dev": "0.0.3",
+    "dr-dev-web": "0.0.3",
+    "dr-js": "^0.20.0"
   }
 }

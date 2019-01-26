@@ -38,4 +38,16 @@ runMain(async (logger) => {
     `  exit 1 "1" "2" "3"`,
     `)`
   ].join('\n'))
+
+  log('parse-script-list: "test" and "prepack"')
+  testOutput(`${command} --sl test prepack`, [
+    `(`,
+    `  npm --no-update-notifier run "script-pack-test"`,
+    `  (`,
+    `    echo "Error: pack with script-*"`,
+    `    exit 1`,
+    `  )`,
+    `)`
+  ].join('\n'))
+
 }, getLogger(process.argv.slice(2).join('+'), argvFlag('quiet')))

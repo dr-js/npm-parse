@@ -1,35 +1,27 @@
-import { ConfigPresetNode, prepareOption } from 'dr-js/module/node/module/Option'
+import { Preset, prepareOption } from 'dr-js/module/node/module/Option/preset'
 
-const { BooleanFlag, Config } = ConfigPresetNode
+const { Config, parseCompactList } = Preset
 
-const parseFormat = (modeFormat) => {
-  const [ name, alterName = '', argumentCount, isPath ] = modeFormat.split('|').map((v) => v || undefined)
-  return {
-    optional: true,
-    name,
-    shortName: alterName.length === 1 ? alterName : undefined,
-    aliasNameList: alterName ? [ alterName ] : [],
-    argumentCount: argumentCount || 0,
-    isPath: Boolean(isPath)
-  }
-}
-
-const MODE_FORMAT_LIST = [
-  'parse-script|s|1-',
-  'run-script|r|1-'
-].map(parseFormat)
+const MODE_FORMAT_LIST = parseCompactList(
+  'parse-script,s/AS,O|$@=scriptName,...extraArgs',
+  'parse-script-list,sl/AS,O|$@=...scriptNameList',
+  'run-script,r/AS,O|$@=scriptName,...extraArgs',
+  'run-script-list,rl/AS,O|$@=...scriptNameList'
+)
+const MODE_NAME_LIST = MODE_FORMAT_LIST.map(({ name }) => name)
 
 const OPTION_CONFIG = {
   prefixENV: 'npm-parse',
   formatList: [
     Config,
-    { ...BooleanFlag, name: 'help', shortName: 'h' },
-    { ...BooleanFlag, name: 'version', shortName: 'v' },
-    { ...BooleanFlag, name: 'debug', shortName: 'D', description: `more debug log` },
+    ...parseCompactList(
+      'help,h/T|show full help',
+      'debug,D/T|more debug log',
+      'version,v/T|show version'
+    ),
     ...MODE_FORMAT_LIST
   ]
 }
-
 const { parseOption, formatUsage } = prepareOption(OPTION_CONFIG)
 
-export { MODE_FORMAT_LIST, parseOption, formatUsage }
+export { MODE_NAME_LIST, parseOption, formatUsage }

@@ -1,4 +1,4 @@
-import { stringIndentLine } from 'dr-js/module/common/format'
+import { indentLine } from 'dr-js/module/common/string'
 
 const COMPLEX_BASH_COMMAND_LIST = [ // complex command, do not parse further
   'bash', 'sh', 'ssh', '.', 'source',
@@ -20,7 +20,7 @@ const REGEXP_QUOTE = /[" ]/g
 const wrapJoinBashArgs = (args) => args.map((arg) => `"${arg.replace(REGEXP_ESCAPE, '\\\\').replace(REGEXP_QUOTE, '\\$&')}"`).join(' ')
 
 const warpBashSubShell = (command) => `(
-${stringIndentLine(command, '  ')}
+${indentLine(command, '  ')}
 )`
 
 const parseCommand = (packageJSON, scriptString, level, devLog) => {

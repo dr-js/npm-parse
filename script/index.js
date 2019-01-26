@@ -9,7 +9,7 @@ import { processFileList, fileProcessorBabel, fileProcessorWebpack } from 'dr-de
 import { getTerserOption, minifyFileListWithTerser } from 'dr-dev/module/minify'
 import { writeLicenseFile } from 'dr-dev/module/license'
 
-import { binary as formatBinary } from 'dr-js/module/common/format'
+import { binary } from 'dr-js/module/common/format'
 import { modify } from 'dr-js/module/node/file/Modify'
 
 const PATH_ROOT = resolve(__dirname, '..')
@@ -43,7 +43,7 @@ const processOutput = async ({ packageJSON, logger }) => {
   sizeReduce += await processFileList({ fileList: fileListLibrary, processor: fileProcessorBabel, rootPath: PATH_OUTPUT, logger })
   sizeReduce += await processFileList({ fileList: fileListBin, processor: fileProcessorWebpack, rootPath: PATH_OUTPUT, logger })
 
-  logger.padLog(`output size reduce: ${formatBinary(sizeReduce)}B`)
+  logger.padLog(`output size reduce: ${binary(sizeReduce)}B`)
 }
 
 const testCode = async ({ logger: { padLog } }) => {
