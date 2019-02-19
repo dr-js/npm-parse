@@ -2,8 +2,7 @@ import { resolve } from 'path'
 import { strictEqual } from 'assert'
 import { execSync } from 'child_process'
 
-import { argvFlag, runMain } from 'dr-dev/module/main'
-import { getLogger } from 'dr-dev/module/logger'
+import { runMain, argvFlag } from 'dr-dev/module/main'
 
 import { name as packageName, version as packageVersion } from '../package.json'
 
@@ -16,9 +15,7 @@ const testOutput = (command, expectOutput) => strictEqual(
   expectOutput
 )
 
-runMain(async (logger) => {
-  const { padLog, log } = logger
-
+runMain(async ({ padLog, log }) => {
   const command = argvFlag('npx')
     ? `npx ${packageName}-${packageVersion}.tgz`
     : 'node ./output-gitignore/bin'
@@ -28,7 +25,7 @@ runMain(async (logger) => {
   log('parse-script: "test"')
   testOutput(
     `${command} -s test`,
-    `npm --no-update-notifier run "script-pack-test"`
+    `npm run "script-pack-test"`
   )
 
   log('parse-script: "prepack" with extraArgs')
@@ -42,12 +39,11 @@ runMain(async (logger) => {
   log('parse-script-list: "test" and "prepack"')
   testOutput(`${command} --sl test prepack`, [
     `(`,
-    `  npm --no-update-notifier run "script-pack-test"`,
+    `  npm run "script-pack-test"`,
     `  (`,
     `    echo "Error: pack with script-*"`,
     `    exit 1`,
     `  )`,
     `)`
   ].join('\n'))
-
-}, getLogger(process.argv.slice(2).join('+'), argvFlag('quiet')))
+})

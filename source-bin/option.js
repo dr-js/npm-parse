@@ -3,10 +3,13 @@ import { Preset, prepareOption } from 'dr-js/module/node/module/Option/preset'
 const { Config, parseCompactList } = Preset
 
 const MODE_FORMAT_LIST = parseCompactList(
-  'parse-script,s/AS,O|$@=scriptName,...extraArgs',
-  'parse-script-list,sl/AS,O|$@=...scriptNameList',
-  'run-script,r/AS,O|$@=scriptName,...extraArgs',
-  'run-script-list,rl/AS,O|$@=...scriptNameList'
+  'parse-script,s/AS,O|parse and echo: $@=scriptName,...extraArgs',
+  'parse-script-list,sl/AS,O|combine multi-script, but no extraArgs: $@=...scriptNameList',
+  'run-script,r/AS,O|parse and run: $@=scriptName,...extraArgs',
+  'run-script-list,rl/AS,O|combine multi-script, but no extraArgs: $@=...scriptNameList',
+  'npm-combo,nc/AS,O|useful npm combo',
+  'npx-lazy,npx,nl/AS,O|skip npx re-install if package version fit: $@=package@version,...extraArgs'
+  // TODO: add combo: npm i && npm ddp && npm i
 )
 const MODE_NAME_LIST = MODE_FORMAT_LIST.map(({ name }) => name)
 

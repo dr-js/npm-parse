@@ -190,7 +190,7 @@ but in production, less dead memory is always good
 
 for above example, `npx npm-parse -s layer-0` will get you: 
 ```bash
-npm --no-update-notifier run "layer-4"
+npm run "layer-4"
 ```
 
 and, `npx npm-parse -s layer-x0` will get you: 
@@ -201,8 +201,27 @@ npx dr-js --stc
 better yet, `npx npm-parse -s layer-combo` will get you: 
 ```bash
 (
-  npm --no-update-notifier run "layer-4"
-  npm --no-update-notifier run "layer-y4"
+  npm run "layer-4"
+  npm run "layer-y4"
   npx dr-js --stc
 )
 ```
+
+
+#### Extra
+
+come extra feature:
+
+- npm-combo: 
+  common npm combo
+  ```bash
+  npm-parse -D --npm-combo list
+  ```
+
+- npx-lazy:
+  try skip the npx package re-install
+  when run npx command like: `npx package-name@0.1.2-dev3 ...`
+  if the requested package version is available in local/global `node_modules`
+  ```bash
+  npm-parse -D --npx-lazy -- package-name@0.1.2-dev3 ...
+  ```

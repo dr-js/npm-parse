@@ -1,5 +1,9 @@
 import { indentLine } from 'dr-js/module/common/string'
 
+const DEFAULT_PAD_LOG = __DEV__
+  ? (padLevel, ...args) => console.log(`${'  '.repeat(padLevel)}${args.join(' ')}`)
+  : () => {}
+
 const COMPLEX_BASH_COMMAND_LIST = [ // complex command, do not parse further
   'bash', 'sh', 'ssh', '.', 'source',
   'su', 'sudo',
@@ -23,8 +27,8 @@ const warpBashSubShell = (command) => `(
 ${indentLine(command, '  ')}
 )`
 
-const parseCommand = (packageJSON, scriptString, level, devLog) => {
-  devLog(level, '[parseCommand]', `input: <${scriptString}>`)
+const parseCommand = (packageJSON, scriptString, level, padLog = DEFAULT_PAD_LOG) => {
+  padLog(level, '[parseCommand]', `input: <${scriptString}>`)
   scriptString = scriptString.trim()
 
   const [ scriptLeadingCommand, scriptSecondCommand, ...scriptExtraCommandList ] = scriptString.split(' ')
@@ -32,49 +36,53 @@ const parseCommand = (packageJSON, scriptString, level, devLog) => {
     COMPLEX_BASH_COMMAND_LIST.includes(scriptLeadingCommand) ||
     scriptLeadingCommand.startsWith('./')
   ) {
-    devLog(level, '- directly executable complex command, return')
+    padLog(level, '- directly executable complex command, return')
     return scriptString
-  } else devLog(level, `? not directly executable complex command: ${scriptLeadingCommand}`)
+  } else padLog(level, `? not directly executable complex command: ${scriptLeadingCommand}`)
 
   if (scriptString.includes(' && ')) {
-    devLog(level, '- combo command, split')
+    padLog(level, '- combo command, split')
 
     const subCommandList = scriptString.split(' && ')
-    return warpBashSubShell(subCommandList.map((command) => parseCommand(packageJSON, command, level + 1, devLog) || command).join('\n'))
-  } else devLog(level, `? not combo command, I guess`)
+    return warpBashSubShell(subCommandList.map((command) => parseCommand(packageJSON, command, level + 1, padLog) || command).join('\n'))
+  } else padLog(level, `? not combo command, I guess`)
 
   if (SIMPLE_BASH_COMMAND_LIST.includes(scriptLeadingCommand)) {
-    devLog(level, '- directly executable simple command, return')
+    padLog(level, '- directly executable simple command, return')
 
     return scriptString
-  } else devLog(level, `? not directly executable simple command: ${scriptLeadingCommand}`)
+  } else padLog(level, `? not directly executable simple command: ${scriptLeadingCommand}`)
+
+  // TODO: consider allow package dependency command
+  // TODO: consider allow package dependency command
+  // TODO: consider allow package dependency command
 
   if (
     scriptSecondCommand === 'run' &&
     [ 'npm', 'yarn' ].includes(scriptLeadingCommand)
   ) {
-    devLog(level, '- package script, parse')
+    padLog(level, '- package script, parse')
 
     const [ scriptName, ...extraArgs ] = scriptExtraCommandList
     extraArgs[ 0 ] === '--' && extraArgs.shift()
-    return parsePackageScript(packageJSON, scriptName, extraArgs.join(' '), level + 1, devLog)
-  } else devLog(level, '? unknown npm/yarn script')
+    return parsePackageScript(packageJSON, scriptName, extraArgs.join(' '), level + 1, padLog)
+  } else padLog(level, '? unknown npm/yarn script')
 
-  devLog(level, '? unknown script, bail')
+  padLog(level, '? unknown script, bail')
   return ''
 }
 
-const parsePackageScript = (packageJSON, scriptName, extraArgsString = '', level, devLog) => {
-  devLog(level, '[parsePackageScript]', `script name: <${scriptName}>, extra: ${extraArgsString}`)
+const parsePackageScript = (packageJSON, scriptName, extraArgsString = '', level, padLog = DEFAULT_PAD_LOG) => {
+  padLog(level, '[parsePackageScript]', `script name: <${scriptName}>, extra: ${extraArgsString}`)
 
   const scriptString = packageJSON[ 'scripts' ][ scriptName ]
   if (!scriptString) throw new Error(`[parsePackageScript] missing script with name: ${scriptName}`)
 
-  const resultCommand = parseCommand(packageJSON, [ scriptString, extraArgsString ].filter(Boolean).join(' '), level + 1, devLog)
+  const resultCommand = parseCommand(packageJSON, [ scriptString, extraArgsString ].filter(Boolean).join(' '), level + 1, padLog)
   if (resultCommand) return resultCommand
 
-  devLog(level, '? unexpected script, bail to npm run')
-  return [ `npm --no-update-notifier run "${scriptName}"`, extraArgsString ].filter(Boolean).join(' -- ')
+  padLog(level, '? unexpected script, bail to npm run')
+  return [ `npm run "${scriptName}"`, extraArgsString ].filter(Boolean).join(' -- ')
 }
 
 export {

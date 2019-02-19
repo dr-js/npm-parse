@@ -8,9 +8,10 @@ import {
   parsePackageScript
 } from './parseScript'
 
-const { describe, it } = global
+const { describe, it, info = console.log } = global
 
-const devLog = () => {}
+const tagLog = (padLevel, ...args) => info(`${'  '.repeat(padLevel)}${args.join(' ')}`)
+
 const packageJSON = JSON.parse(readFileSync(resolve(__dirname, '../package.json')))
 
 describe('parseScript', () => {
@@ -26,11 +27,11 @@ describe('parseScript', () => {
 
   it('parseCommand()', () => {
     const part0 = `should return '' for unknown command`
-    strictEqual(parseCommand(packageJSON, '', 0, devLog), '', part0)
-    strictEqual(parseCommand(packageJSON, '123', 0, devLog), '', part0)
-    strictEqual(parseCommand(packageJSON, 'a b c', 0, devLog), '', part0)
-    strictEqual(parseCommand(packageJSON, 'npm outdated', 0, devLog), '', part0)
-    strictEqual(parseCommand(packageJSON, 'yarn outdated', 0, devLog), '', part0)
+    strictEqual(parseCommand(packageJSON, '', 0, tagLog), '', part0)
+    strictEqual(parseCommand(packageJSON, '123', 0, tagLog), '', part0)
+    strictEqual(parseCommand(packageJSON, 'a b c', 0, tagLog), '', part0)
+    strictEqual(parseCommand(packageJSON, 'npm outdated', 0, tagLog), '', part0)
+    strictEqual(parseCommand(packageJSON, 'yarn outdated', 0, tagLog), '', part0)
 
     const part1 = `should return/unwrap for directly executable command`
     const part1CommandList = [
@@ -43,17 +44,17 @@ describe('parseScript', () => {
       'rm -rf /*',
       'kill 3000'
     ]
-    part1CommandList.forEach((command) => strictEqual(parseCommand(packageJSON, command, 0, devLog), command, part1))
+    part1CommandList.forEach((command) => strictEqual(parseCommand(packageJSON, command, 0, tagLog), command, part1))
 
     const part2 = `should parse 'npm/yarn run' command`
-    strictEqual(parseCommand(packageJSON, 'npm run test', 0, devLog), 'npm --no-update-notifier run "script-pack-test"', part2)
-    strictEqual(parseCommand(packageJSON, 'yarn run test', 0, devLog), 'npm --no-update-notifier run "script-pack-test"', part2)
+    strictEqual(parseCommand(packageJSON, 'npm run test', 0, tagLog), 'npm run "script-pack-test"', part2)
+    strictEqual(parseCommand(packageJSON, 'yarn run test', 0, tagLog), 'npm run "script-pack-test"', part2)
 
     const part3 = `should parse combo command`
-    strictEqual(parseCommand(packageJSON, 'npm run test && yarn run test && npm run prepack', 0, devLog), [
+    strictEqual(parseCommand(packageJSON, 'npm run test && yarn run test && npm run prepack', 0, tagLog), [
       '(',
-      '  npm --no-update-notifier run "script-pack-test"',
-      '  npm --no-update-notifier run "script-pack-test"',
+      '  npm run "script-pack-test"',
+      '  npm run "script-pack-test"',
       '  (',
       '    echo "Error: pack with script-*"',
       '    exit 1',
@@ -63,16 +64,16 @@ describe('parseScript', () => {
   })
 
   it('parsePackageScript()', () => {
-    strictEqual(parsePackageScript(packageJSON, 'test', '', 0, devLog), 'npm --no-update-notifier run "script-pack-test"')
-    strictEqual(parsePackageScript(packageJSON, 'test', '"1" "2" "\\""', 0, devLog), 'npm --no-update-notifier run "script-pack-test" -- "1" "2" "\\""')
+    strictEqual(parsePackageScript(packageJSON, 'test', '', 0, tagLog), 'npm run "script-pack-test"')
+    strictEqual(parsePackageScript(packageJSON, 'test', '"1" "2" "\\""', 0, tagLog), 'npm run "script-pack-test" -- "1" "2" "\\""')
 
-    strictEqual(parsePackageScript(packageJSON, 'prepack', '', 0, devLog), [
+    strictEqual(parsePackageScript(packageJSON, 'prepack', '', 0, tagLog), [
       '(',
       '  echo "Error: pack with script-*"',
       '  exit 1',
       ')'
     ].join('\n'))
-    strictEqual(parsePackageScript(packageJSON, 'prepack', '"1" "2" "\\""', 0, devLog), [
+    strictEqual(parsePackageScript(packageJSON, 'prepack', '"1" "2" "\\""', 0, tagLog), [
       '(',
       '  echo "Error: pack with script-*"',
       '  exit 1 "1" "2" "\\""',

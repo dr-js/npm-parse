@@ -1,8 +1,7 @@
 import { resolve } from 'path'
 import { DefinePlugin } from 'webpack'
 
-import { argvFlag, runMain } from 'dr-dev/module/main'
-import { getLogger } from 'dr-dev/module/logger'
+import { runMain } from 'dr-dev/module/main'
 import { compileWithWebpack, commonFlag } from 'dr-dev/module/webpack'
 
 const PATH_ROOT = resolve(__dirname, '..')
@@ -11,7 +10,7 @@ const fromRoot = (...args) => resolve(PATH_ROOT, ...args)
 const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
 
 runMain(async (logger) => {
-  const { mode, isWatch, isProduction, profileOutput, assetMapOutput } = await commonFlag({ argvFlag, fromRoot, logger })
+  const { mode, isWatch, isProduction, profileOutput, assetMapOutput } = await commonFlag({ fromRoot, logger })
 
   const babelOption = {
     configFile: false,
@@ -24,6 +23,7 @@ runMain(async (logger) => {
     mode,
     bail: isProduction,
     target: 'node', // support node main modules like 'fs'
+    node: false,
     output: { path: fromOutput('library'), filename: '[name].js', libraryTarget: 'commonjs2' },
     entry: { index: 'source/index' },
     resolve: { alias: { source: fromRoot('source') } },
@@ -34,4 +34,4 @@ runMain(async (logger) => {
 
   logger.padLog(`compile with webpack mode: ${mode}, isWatch: ${Boolean(isWatch)}`)
   await compileWithWebpack({ config, isWatch, profileOutput, assetMapOutput, logger })
-}, getLogger(`webpack`))
+}, 'webpack')
