@@ -31,6 +31,9 @@ NPM_COMBO_COMMAND_LIST_MAP[ 'config' ] = NPM_COMBO_COMMAND_LIST_MAP[ 'c' ] = [
   [ 'npm config set update-notifier false', 'per-user config, stop npm auto check for update, good for server' ],
   [ 'npm config list', 'list non-default config' ]
 ]
+NPM_COMBO_COMMAND_LIST_MAP[ 'install-offline' ] = NPM_COMBO_COMMAND_LIST_MAP[ 'io' ] = [
+  [ 'npm i --prefer-offline', 'prefer local version when install' ]
+]
 NPM_COMBO_COMMAND_LIST_MAP[ 'package-dedupe' ] = NPM_COMBO_COMMAND_LIST_MAP[ 'ddp' ] = [
   [ 'npm i', 'first install' ],
   [ 'npm ddp', 'try dedupe, may change "package-lock.json"' ],

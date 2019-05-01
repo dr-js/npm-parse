@@ -34,9 +34,9 @@
 >       parse and run: $@=scriptName,...extraArgs
 >   --run-script-list --rl [OPTIONAL] [ARGUMENT=1+]
 >       combine multi-script, but no extraArgs: $@=...scriptNameList
->   --npm-combo --nc [OPTIONAL] [ARGUMENT=1+]
+>   --npm-combo --nc --M [OPTIONAL] [ARGUMENT=1+]
 >       useful npm combo
->   --npx-lazy --npx --nl [OPTIONAL] [ARGUMENT=1+]
+>   --npx-lazy --npx --nl --X [OPTIONAL] [ARGUMENT=1+]
 >       skip npx re-install if package version fit: $@=package@version,...extraArgs
 > ENV Usage:
 >   "

@@ -2,11 +2,9 @@ import { resolve, sep } from 'path'
 import { execSync } from 'child_process'
 import { writeFileSync, existsSync } from 'fs'
 
-import { indentLine } from 'dr-js/module/common/string'
-
 import { collectSourceRouteMap } from 'dr-dev/module/node/export/parse'
 import { generateIndexScript, generateExportInfo } from 'dr-dev/module/node/export/generate'
-import { autoAppendMarkdownHeaderLink, renderMarkdownFileLink, renderMarkdownExportPath, renderMarkdownExportTree } from 'dr-dev/module/node/export/renderMarkdown'
+import { getMarkdownFileLink, renderMarkdownAutoAppendHeaderLink, renderMarkdownBlockQuote, renderMarkdownExportPath, renderMarkdownExportTree } from 'dr-dev/module/node/export/renderMarkdown'
 import { runMain } from 'dr-dev/module/main'
 
 import { formatUsage } from 'source-bin/option'
@@ -21,13 +19,6 @@ const [
 ] = process.argv
 
 const PATH_FILE_DELETE_CONFIG = resolve(process.cwd(), PATH_FILE_DELETE_CONFIG_RAW)
-
-const renderMarkdownBinOptionFormat = () => [
-  renderMarkdownFileLink('source-bin/option.js'),
-  '> ```',
-  indentLine(formatUsage(), '> '),
-  '> ```'
-]
 
 const generateTempFile = ({ sourceRouteMap, logger }) => {
   const tempFileList = []
@@ -63,7 +54,7 @@ runMain(async (logger) => {
   writeFileSync(fromRoot('SPEC.md'), [
     '# Specification',
     '',
-    ...autoAppendMarkdownHeaderLink(
+    ...renderMarkdownAutoAppendHeaderLink(
       '#### Export Path',
       ...renderMarkdownExportPath({ exportInfoMap, rootPath: PATH_ROOT }),
       '',
@@ -71,7 +62,8 @@ runMain(async (logger) => {
       ...renderMarkdownExportTree({ exportInfo: exportInfoMap[ initRouteList.join('/') ], routeList: initRouteList }),
       '',
       '#### Bin Option Format',
-      ...renderMarkdownBinOptionFormat()
+      getMarkdownFileLink('source-bin/option.js'),
+      ...renderMarkdownBlockQuote(formatUsage())
     ),
     ''
   ].join('\n'))

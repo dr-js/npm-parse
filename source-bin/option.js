@@ -7,9 +7,8 @@ const MODE_FORMAT_LIST = parseCompactList(
   'parse-script-list,sl/AS,O|combine multi-script, but no extraArgs: $@=...scriptNameList',
   'run-script,r/AS,O|parse and run: $@=scriptName,...extraArgs',
   'run-script-list,rl/AS,O|combine multi-script, but no extraArgs: $@=...scriptNameList',
-  'npm-combo,nc/AS,O|useful npm combo',
-  'npx-lazy,npx,nl/AS,O|skip npx re-install if package version fit: $@=package@version,...extraArgs'
-  // TODO: add combo: npm i && npm ddp && npm i
+  'npm-combo,nc,M/AS,O|useful npm combo',
+  'npx-lazy,npx,nl,X/AS,O|skip npx re-install if package version fit: $@=package@version,...extraArgs'
 )
 const MODE_NAME_LIST = MODE_FORMAT_LIST.map(({ name }) => name)
 

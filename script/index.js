@@ -6,7 +6,6 @@ import { runMain, argvFlag } from 'dr-dev/module/main'
 import { initOutput, packOutput, verifyOutputBinVersion, publishOutput } from 'dr-dev/module/output'
 import { processFileList, fileProcessorBabel, fileProcessorWebpack } from 'dr-dev/module/fileProcessor'
 import { getTerserOption, minifyFileListWithTerser } from 'dr-dev/module/minify'
-import { writeLicenseFile } from 'dr-dev/module/license'
 
 import { binary } from 'dr-js/module/common/format'
 import { modify } from 'dr-js/module/node/file/Modify'
@@ -49,6 +48,9 @@ const processOutput = async ({ logger }) => {
 }
 
 const testCode = async ({ logger: { padLog } }) => {
+  padLog('lint source')
+  execSync(`npm run lint`, execOptionRoot)
+
   padLog(`test source`)
   execSync(`npm run test-source`, execOptionRoot)
 
@@ -67,7 +69,6 @@ const clearOutput = async ({ logger: { padLog, log } }) => {
 runMain(async (logger) => {
   const isTest = argvFlag('test', 'publish', 'publish-dev')
   const packageJSON = await initOutput({ fromRoot, fromOutput, logger })
-  writeLicenseFile(fromRoot('LICENSE'), packageJSON.license, packageJSON.author)
   if (!argvFlag('pack')) return
 
   await buildOutput({ logger })
