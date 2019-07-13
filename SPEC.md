@@ -28,15 +28,15 @@
 >       show version
 >   --parse-script --s -s [OPTIONAL] [ARGUMENT=1+]
 >       parse and echo: $@=scriptName,...extraArgs
->   --parse-script-list --sl [OPTIONAL] [ARGUMENT=1+]
+>   --parse-script-list --sl --S -S [OPTIONAL] [ARGUMENT=1+]
 >       combine multi-script, but no extraArgs: $@=...scriptNameList
 >   --run-script --r -r [OPTIONAL] [ARGUMENT=1+]
 >       parse and run: $@=scriptName,...extraArgs
->   --run-script-list --rl [OPTIONAL] [ARGUMENT=1+]
+>   --run-script-list --rl --R -R [OPTIONAL] [ARGUMENT=1+]
 >       combine multi-script, but no extraArgs: $@=...scriptNameList
->   --npm-combo --nc --M [OPTIONAL] [ARGUMENT=1+]
->       useful npm combo
->   --npx-lazy --npx --nl --X [OPTIONAL] [ARGUMENT=1+]
+>   --npm-combo --nc --M -M [OPTIONAL] [ARGUMENT=1+]
+>       useful npm combo, list all with "help/list"
+>   --npx-lazy --npx --nl --X -X [OPTIONAL] [ARGUMENT=1+]
 >       skip npx re-install if package version fit: $@=package@version,...extraArgs
 > ENV Usage:
 >   "
