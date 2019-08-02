@@ -42,7 +42,9 @@ describe('parseScript', () => {
       'echo 123',
       'node ./bin/index.js',
       'rm -rf /*',
-      'kill 3000'
+      'kill 3000',
+      'env AAA="BBB" node -p process.env.AAA',
+      'AAA="BBB" node -p process.env.AAA'
     ]
     part1CommandList.forEach((command) => strictEqual(parseCommand(packageJSON, command, 0, tagLog), command, part1))
 

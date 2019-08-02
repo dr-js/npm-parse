@@ -25,7 +25,7 @@ Reduce npm bloat
 
 #### Usage
 
-###### NOTE: bash only, not all use case is considered, so test before actually using
+###### NOTE: output is `bash` only, will drop hpm script env inject, not all use case is considered, so test before actually using in production
 
 first go to a directory with `package.json` file
 
