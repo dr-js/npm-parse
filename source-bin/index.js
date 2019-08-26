@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs'
-import { run } from 'dr-js/module/node/system/Run'
+import { run } from '@dr-js/core/module/node/system/Run'
 
 import {
   wrapJoinBashArgs, warpBashSubShell, parsePackageScript,
@@ -30,7 +30,7 @@ const runMode = async (modeName, { get, tryGet }) => {
     command = parsePackageScript(packageJSON, scriptName, wrapJoinBashArgs(extraArgs), 0, padLog)
   }
   if (modeName.startsWith('parse-script')) return console.log(command)
-  if (modeName.startsWith('run-script')) return run({ command: 'bash', argList: [ '-c', command ], option: { stdio: 'inherit', shell: false } }).promise
+  if (modeName.startsWith('run-script')) return run({ command: 'bash', argList: [ '-c', command ] }).promise
 }
 
 const main = async () => {

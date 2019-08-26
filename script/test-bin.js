@@ -1,8 +1,8 @@
 import { resolve } from 'path'
 import { execSync } from 'child_process'
-import { strictEqual } from 'dr-js/module/common/verify'
+import { strictEqual } from '@dr-js/core/module/common/verify'
 
-import { runMain, argvFlag } from 'dr-dev/module/main'
+import { runMain, argvFlag } from '@dr-js/dev/module/main'
 
 import { name as packageName, version as packageVersion } from '../package.json'
 

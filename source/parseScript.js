@@ -1,4 +1,4 @@
-import { indentLine } from 'dr-js/module/common/string'
+import { indentLine } from '@dr-js/core/module/common/string'
 
 const DEFAULT_PAD_LOG = __DEV__
   ? (padLevel, ...args) => console.log(`${'  '.repeat(padLevel)}${args.join(' ')}`)

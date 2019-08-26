@@ -84,7 +84,7 @@ try `npm run layer-0` with this somewhat extreme `package.json`:
     "layer-x1": "yarn run layer-x2",
     "layer-x2": "npm run layer-x3",
     "layer-x3": "yarn run layer-x4",
-    "layer-x4": "npx dr-js --stc",
+    "layer-x4": "npx @dr-js/core --stc",
     
     "layer-combo": "npm run layer-0 && npm run layer-y0 && npm run layer-x0"
   }
@@ -178,8 +178,8 @@ or global install and run do not have this big wrapper issue
 here's some test result:
 - with `npm run layer-x0` (5 mixed wrapper) memory increase about `160MB`
 - with `npm run layer-x4` (1 npm wrapper) memory increase about `30MB`
-- with `npx dr-js --stc` memory increase about `16MB`
-- with `npm i -g dr-js && dr-js --stc` memory increase about `14MB`
+- with `npx @dr-js/core --stc` memory increase about `16MB`
+- with `npm i -g @dr-js/core && dr-js --stc` memory increase about `14MB`
 
 for develop or package building, some extra memory is fine, 
 even the occasional `npm upgrade box` is bearable
@@ -195,7 +195,7 @@ npm run "layer-4"
 
 and, `npx npm-parse -s layer-x0` will get you: 
 ```bash
-npx dr-js --stc
+npx @dr-js/core --stc
 ```
 
 better yet, `npx npm-parse -s layer-combo` will get you: 
@@ -203,7 +203,7 @@ better yet, `npx npm-parse -s layer-combo` will get you:
 (
   npm run "layer-4"
   npm run "layer-y4"
-  npx dr-js --stc
+  npx @dr-js/core --stc
 )
 ```
 

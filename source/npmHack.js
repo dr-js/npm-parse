@@ -1,8 +1,8 @@
 import { resolve } from 'path'
 import { statSync } from 'fs'
 import { execSync } from 'child_process'
-import { tryRequire } from 'dr-js/module/env/tryRequire'
-import { indentLine } from 'dr-js/module/common/string'
+import { tryRequire } from '@dr-js/core/module/env/tryRequire'
+import { indentLine } from '@dr-js/core/module/common/string'
 
 const DEFAULT_PAD_LOG = __DEV__
   ? (padLevel, ...args) => console.log(`${'  '.repeat(padLevel)}${args.join(' ')}`)
