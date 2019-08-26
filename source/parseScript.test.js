@@ -1,6 +1,7 @@
-import { strictEqual } from 'assert'
 import { resolve } from 'path'
 import { readFileSync } from 'fs'
+import { strictEqual } from 'dr-js/module/common/verify'
+
 import {
   wrapJoinBashArgs,
   warpBashSubShell,
@@ -49,14 +50,14 @@ describe('parseScript', () => {
     part1CommandList.forEach((command) => strictEqual(parseCommand(packageJSON, command, 0, tagLog), command, part1))
 
     const part2 = `should parse 'npm/yarn run' command`
-    strictEqual(parseCommand(packageJSON, 'npm run test', 0, tagLog), 'npm run "script-pack-test"', part2)
-    strictEqual(parseCommand(packageJSON, 'yarn run test', 0, tagLog), 'npm run "script-pack-test"', part2)
+    strictEqual(parseCommand(packageJSON, 'npm run test', 0, tagLog), 'node -r @babel/register ./script verbose pack test', part2)
+    strictEqual(parseCommand(packageJSON, 'yarn run test', 0, tagLog), 'node -r @babel/register ./script verbose pack test', part2)
 
     const part3 = `should parse combo command`
     strictEqual(parseCommand(packageJSON, 'npm run test && yarn run test && npm run prepack', 0, tagLog), [
       '(',
-      '  npm run "script-pack-test"',
-      '  npm run "script-pack-test"',
+      '  node -r @babel/register ./script verbose pack test',
+      '  node -r @babel/register ./script verbose pack test',
       '  (',
       '    echo "Error: pack with script-*"',
       '    exit 1',
@@ -66,8 +67,8 @@ describe('parseScript', () => {
   })
 
   it('parsePackageScript()', () => {
-    strictEqual(parsePackageScript(packageJSON, 'test', '', 0, tagLog), 'npm run "script-pack-test"')
-    strictEqual(parsePackageScript(packageJSON, 'test', '"1" "2" "\\""', 0, tagLog), 'npm run "script-pack-test" -- "1" "2" "\\""')
+    strictEqual(parsePackageScript(packageJSON, 'test', '', 0, tagLog), 'node -r @babel/register ./script verbose pack test')
+    strictEqual(parsePackageScript(packageJSON, 'test', '"1" "2" "\\""', 0, tagLog), 'node -r @babel/register ./script verbose pack test "1" "2" "\\""')
 
     strictEqual(parsePackageScript(packageJSON, 'prepack', '', 0, tagLog), [
       '(',

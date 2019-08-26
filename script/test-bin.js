@@ -1,6 +1,6 @@
 import { resolve } from 'path'
-import { strictEqual } from 'assert'
 import { execSync } from 'child_process'
+import { strictEqual } from 'dr-js/module/common/verify'
 
 import { runMain, argvFlag } from 'dr-dev/module/main'
 
@@ -25,7 +25,7 @@ runMain(async ({ padLog, log }) => {
   log('parse-script: "test"')
   testOutput(
     `${command} -s test`,
-    `npm run "script-pack-test"`
+    `node -r @babel/register ./script verbose pack test`
   )
 
   log('parse-script: "prepack" with extraArgs')
@@ -39,7 +39,7 @@ runMain(async ({ padLog, log }) => {
   log('parse-script-list: "test" and "prepack"')
   testOutput(`${command} --sl test prepack`, [
     `(`,
-    `  npm run "script-pack-test"`,
+    `  node -r @babel/register ./script verbose pack test`,
     `  (`,
     `    echo "Error: pack with script-*"`,
     `    exit 1`,

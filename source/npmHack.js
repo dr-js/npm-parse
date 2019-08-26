@@ -41,11 +41,12 @@ NPM_COMBO_COMMAND_LIST_MAP[ 'package-dedupe' ] = NPM_COMBO_COMMAND_LIST_MAP[ 'dd
 ]
 
 const npmCombo = (comboNameList, padLog = DEFAULT_PAD_LOG) => {
-  if ([ 'help', 'h', 'list', 'l' ].includes(comboNameList[ 0 ])) return console.log(`  - ${Object.keys(NPM_COMBO_COMMAND_LIST_MAP).join(', ')}`)
+  if ([ 'help', 'h', 'list', 'ls', 'l' ].includes(comboNameList[ 0 ])) return console.log(`  - ${Object.keys(NPM_COMBO_COMMAND_LIST_MAP).join(', ')}`)
 
   for (const comboName of comboNameList) {
-    padLog(0, `[combo] ${comboName}`)
     const commandList = NPM_COMBO_COMMAND_LIST_MAP[ comboName ]
+    if (!commandList) throw new Error(`[combo] invalid comboName: ${comboName}`)
+    padLog(0, `[combo] ${comboName}`)
     for (const [ command, message ] of commandList) {
       padLog(1, `$ ${command}   # ${message}`)
       const output = String(execSync(command)).trimEnd()
