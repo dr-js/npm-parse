@@ -31,10 +31,7 @@ const generateTempFile = ({ sourceRouteMap, logger }) => {
   const indexScriptMap = generateIndexScript({ sourceRouteMap })
   Object.entries(indexScriptMap).forEach(([ path, data ]) => writeTempFile(path, data))
 
-  writeFileSync(PATH_FILE_DELETE_CONFIG, JSON.stringify({
-    modifyDelete: [ ...tempFileList, PATH_FILE_DELETE_CONFIG ],
-    quiet: true
-  }))
+  writeFileSync(PATH_FILE_DELETE_CONFIG, JSON.stringify({ modifyDelete: [ ...tempFileList, PATH_FILE_DELETE_CONFIG ] }))
 }
 
 runMain(async (logger) => {
