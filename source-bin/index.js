@@ -17,7 +17,7 @@ const runMode = async (modeName, { get, tryGet }) => {
   if (modeName === 'npm-combo') return npmCombo(get(modeName), padLog)
   if (modeName === 'npx-lazy') return npxLazy(get(modeName), padLog)
 
-  const packageJSON = JSON.parse(readFileSync('package.json')) // TODO: NOTE: relative to cwd
+  const packageJSON = JSON.parse(String(readFileSync('package.json'))) // TODO: NOTE: relative to cwd
   let command
   if (modeName.endsWith('-list')) {
     const scriptNameList = get(modeName)

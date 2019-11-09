@@ -31,6 +31,7 @@ const generateTempFile = ({ sourceRouteMap, logger }) => {
   const indexScriptMap = generateIndexScript({ sourceRouteMap })
   Object.entries(indexScriptMap).forEach(([ path, data ]) => writeTempFile(path, data))
 
+  logger.log(`output: ${PATH_FILE_DELETE_CONFIG_RAW}`)
   writeFileSync(PATH_FILE_DELETE_CONFIG, JSON.stringify({ modifyDelete: [ ...tempFileList, PATH_FILE_DELETE_CONFIG ] }))
 }
 
@@ -40,10 +41,8 @@ runMain(async (logger) => {
     execSync('npm run script-delete-temp-build-file', { cwd: fromRoot(), stdio: 'ignore', shell: true })
   }
 
-  logger.log(`collect sourceRouteMap`)
+  logger.padLog(`generate exportInfoMap`)
   const sourceRouteMap = await collectSourceRouteMap({ pathRootList: [ fromRoot('source') ], logger })
-
-  logger.log(`generate exportInfo`)
   const exportInfoMap = generateExportInfo({ sourceRouteMap })
 
   logger.log(`output: SPEC.md`)
@@ -65,6 +64,5 @@ runMain(async (logger) => {
     ''
   ].join('\n'))
 
-  logger.log(`output: ${PATH_FILE_DELETE_CONFIG_RAW}`)
   generateTempFile({ sourceRouteMap, logger })
-}, 'generate-export')
+}, 'generate-spec')

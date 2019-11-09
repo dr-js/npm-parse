@@ -8,10 +8,8 @@ import { name as packageName, version as packageVersion } from '../package.json'
 
 const PATH_ROOT = resolve(__dirname, '..')
 const fromRoot = (...args) => resolve(PATH_ROOT, ...args)
-const execOptionRoot = { cwd: fromRoot(), stdio: argvFlag('quiet') ? [ 'ignore', 'ignore', 'inherit' ] : 'inherit', shell: true }
-
 const testOutput = (command, expectOutput) => strictEqual(
-  execSync(command, { ...execOptionRoot, stdio: 'pipe' }).toString().trim(),
+  execSync(command, { cwd: fromRoot(), stdio: 'pipe', shell: true }).toString().trim(),
   expectOutput
 )
 

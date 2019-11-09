@@ -13,7 +13,7 @@ const { describe, it, info = console.log } = global
 
 const tagLog = (padLevel, ...args) => info(`${'  '.repeat(padLevel)}${args.join(' ')}`)
 
-const packageJSON = JSON.parse(readFileSync(resolve(__dirname, '../package.json')))
+const packageJSON = JSON.parse(String(readFileSync(resolve(__dirname, '../package.json'))))
 
 describe('parseScript', () => {
   it('wrapJoinBashArgs()', () => {

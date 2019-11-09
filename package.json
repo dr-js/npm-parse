@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "npm-parse",
-  "version": "0.1.0",
+  "version": "0.1.1-dev.0",
   "description": "Reduce npm bloat",
   "author": "dr-js",
   "license": "MIT",
@@ -22,12 +22,12 @@
     "// build =======================": "",
     "build-library": "node -r @babel/register ./script/webpack production profile",
     "build-library-dev": "node -r @babel/register ./script/webpack development watch",
-    "build-bin": "node -r @babel/register ./script/webpack-bin production profile",
-    "build-bin-dev": "node -r @babel/register ./script/webpack-bin development watch",
+    "build-bin": "node -r @babel/register ./script/webpackBin production profile",
+    "build-bin-dev": "node -r @babel/register ./script/webpackBin development watch",
     "// test ========================": "",
     "test-dev": "dr-dev --TR @babel/register -T source/parseScript.test.js",
     "test-source": "dr-dev --TR @babel/register -T source/ --TFS .test.js",
-    "test-bin": "node -r @babel/register ./script/test-bin",
+    "test-bin": "node -r @babel/register ./script/testBin",
     "// =============================": "",
     "analyze-stat": "npx webpack-bundle-analyzer .temp-gitignore/profile-stat.json output-gitignore/library",
     "analyze-stat-bin": "npx webpack-bundle-analyzer --port 9999 .temp-gitignore/profile-stat-bin.json output-gitignore/bin",
@@ -40,8 +40,9 @@
     "npm": ">=6.12"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.1.0",
-    "@dr-js/dev": "^0.1.0",
-    "@dr-js/dev-web": "^0.1.0"
-  }
+    "@dr-js/core": "0.2.0-dev.6",
+    "@dr-js/dev": "0.2.0-dev.1",
+    "@dr-js/dev-web": "0.2.0-dev.1"
+  },
+  "sideEffects": false
 }

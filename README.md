@@ -7,11 +7,11 @@
 
 Reduce npm bloat
 
-[i:npm]: https://img.shields.io/npm/v/npm-parse.svg?colorB=blue
-[i:npm-dev]: https://img.shields.io/npm/v/npm-parse/dev.svg
+[i:npm]: https://img.shields.io/npm/v/npm-parse?colorB=blue
+[i:npm-dev]: https://img.shields.io/npm/v/npm-parse/dev
 [l:npm]: https://npm.im/npm-parse
-[i:ci]: https://img.shields.io/travis/dr-js/npm-parse/master.svg
-[l:ci]: https://travis-ci.org/dr-js/npm-parse
+[i:ci]: https://img.shields.io/github/workflow/status/dr-js/npm-parse/ci-test
+[l:ci]: https://github.com/dr-js/npm-parse/actions?query=workflow:ci-test
 [i:size]: https://packagephobia.now.sh/badge?p=npm-parse
 [l:size]: https://packagephobia.now.sh/result?p=npm-parse
 
