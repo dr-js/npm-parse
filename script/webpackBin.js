@@ -20,7 +20,7 @@ runMain(async (logger) => {
     output: { path: fromOutput('bin'), filename: '[name].js' },
     entry: { index: 'source-bin/index' },
     resolve: { alias: { 'source-bin': fromRoot('source-bin') } },
-    externals: { 'source': `require('../library')` }
+    externals: { 'source': 'require("../library")' }
   })
 
   logger.padLog(`compile with webpack mode: ${mode}, isWatch: ${Boolean(isWatch)}`)

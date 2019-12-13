@@ -19,22 +19,22 @@ describe('parseScript', () => {
   it('wrapJoinBashArgs()', () => {
     strictEqual(wrapJoinBashArgs([]), '')
     strictEqual(wrapJoinBashArgs([ '.', '1', 'A' ]), '"." "1" "A"')
-    strictEqual(wrapJoinBashArgs([ '"', `'`, '\\', '\\"' ]), '"\\"" "\'" "\\\\" "\\\\\\""')
+    strictEqual(wrapJoinBashArgs([ '"', '\'', '\\', '\\"' ]), '"\\"" "\'" "\\\\" "\\\\\\""')
   })
 
   it('warpBashSubShell()', () => {
-    strictEqual(warpBashSubShell('123'), `(\n  123\n)`)
+    strictEqual(warpBashSubShell('123'), '(\n  123\n)')
   })
 
   it('parseCommand()', () => {
-    const part0 = `should return '' for unknown command`
+    const part0 = 'should return \'\' for unknown command'
     strictEqual(parseCommand(packageJSON, '', 0, tagLog), '', part0)
     strictEqual(parseCommand(packageJSON, '123', 0, tagLog), '', part0)
     strictEqual(parseCommand(packageJSON, 'a b c', 0, tagLog), '', part0)
     strictEqual(parseCommand(packageJSON, 'npm outdated', 0, tagLog), '', part0)
     strictEqual(parseCommand(packageJSON, 'yarn outdated', 0, tagLog), '', part0)
 
-    const part1 = `should return/unwrap for directly executable command`
+    const part1 = 'should return/unwrap for directly executable command'
     const part1CommandList = [
       'cd ./source',
       'cd ./source && abc',
@@ -49,11 +49,11 @@ describe('parseScript', () => {
     ]
     part1CommandList.forEach((command) => strictEqual(parseCommand(packageJSON, command, 0, tagLog), command, part1))
 
-    const part2 = `should parse 'npm/yarn run' command`
+    const part2 = 'should parse \'npm/yarn run\' command'
     strictEqual(parseCommand(packageJSON, 'npm run test', 0, tagLog), 'node -r @babel/register ./script verbose pack test', part2)
     strictEqual(parseCommand(packageJSON, 'yarn run test', 0, tagLog), 'node -r @babel/register ./script verbose pack test', part2)
 
-    const part3 = `should parse combo command`
+    const part3 = 'should parse combo command'
     strictEqual(parseCommand(packageJSON, 'npm run test && yarn run test && npm run prepack', 0, tagLog), [
       '(',
       '  node -r @babel/register ./script verbose pack test',

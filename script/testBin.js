@@ -23,25 +23,25 @@ runMain(async ({ padLog, log }) => {
   log('parse-script: "test"')
   testOutput(
     `${command} -s test`,
-    `node -r @babel/register ./script verbose pack test`
+    'node -r @babel/register ./script verbose pack test'
   )
 
   log('parse-script: "prepack" with extraArgs')
   testOutput(`${command} -s prepack 1 2 "3"`, [
-    `(`,
-    `  echo "Error: pack with script-*"`,
-    `  exit 1 "1" "2" "3"`,
-    `)`
+    '(',
+    '  echo "Error: pack with script-*"',
+    '  exit 1 "1" "2" "3"',
+    ')'
   ].join('\n'))
 
   log('parse-script-list: "test" and "prepack"')
   testOutput(`${command} --sl test prepack`, [
-    `(`,
-    `  node -r @babel/register ./script verbose pack test`,
-    `  (`,
-    `    echo "Error: pack with script-*"`,
-    `    exit 1`,
-    `  )`,
-    `)`
+    '(',
+    '  node -r @babel/register ./script verbose pack test',
+    '  (',
+    '    echo "Error: pack with script-*"',
+    '    exit 1',
+    '  )',
+    ')'
   ].join('\n'))
 })
